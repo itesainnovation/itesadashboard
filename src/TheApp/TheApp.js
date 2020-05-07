@@ -4,7 +4,7 @@ import styles from './theapp.module.scss';
 import logo from '../images/logogv.png'
 import itesa from '../images/logo-itesa.png'
 import {Drawer as TheDrawer} from "../Drawers/Drawer";
-import {DrawerMobile} from "../Drawers/DrawerMenu";
+import {DrawerMobile} from "../Drawers/DrawerMobile";
 import {MenuOutlined} from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
