@@ -10,15 +10,12 @@ import {MenuOutlined} from '@ant-design/icons';
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 
-export function TheApp({}) {
+export function TheApp({user}) {
 
     const [itemOpen, setItemOpen] = useState('pedidos');
     const [mobileOpen, setMobileOpen] = useState(false);
 
     useEffect(() => {
-
-
-// your collection url
 
     },[]);
 
