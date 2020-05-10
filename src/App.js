@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import {TheApp} from "./TheApp/TheApp";
+import { TheApp } from "./TheApp/TheApp";
 import firebase from "./utils/firebase";
 import 'firebase/firestore'
 import 'firebase/auth'
 
 function App() {
-    const [login, setLogin] = useState(true);
+    const [login, setLogin] = useState(false);
     const [user, setUser] = useState({});
-    useEffect(()=>{
-        firebase.auth().onAuthStateChanged(function(user) {
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(function (user) {
+
+            user = { uid: '123asasd' }
+
             if (user) {
                 setLogin(true)
                 let uid = user.uid;
@@ -22,17 +26,18 @@ function App() {
                             theUser.id = doc.id;
                             setUser(theUser);
                         })
-                })
+                    })
             } else {
                 setLogin(false)
             }
         });
-    },[])
-  return (
-    <div className="App">
-        {login &&  <TheApp user={user}/>}
-    </div>
-  );
+    }, [])
+
+    return (
+        <div className="App">
+            {login && <TheApp user={user} />}
+        </div>
+    );
 }
 
 export default App;

@@ -6,6 +6,8 @@ import itesa from '../images/logo-itesa.png'
 import {Drawer as TheDrawer} from "../Drawers/Drawer";
 import {DrawerMobile} from "../Drawers/DrawerMobile";
 import {MenuOutlined} from '@ant-design/icons';
+import TableShops from '../Components/Table/TableShops';
+
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -19,7 +21,14 @@ export function TheApp({user}) {
 
     },[]);
 
-
+    const {id} = user;
+    
+    const contentBody = () => (
+        (itemOpen == 'pedidos' && <TableShops itemOpen id={id} />) ||
+        (itemOpen == 'tiendas' && <TableShops itemOpen id={id} />) ||
+        (itemOpen == 'Productos' && <TableShops itemOpen id={id} />) ||
+        (itemOpen == 'Mi cuenta' && <TableShops itemOpen id={id} />)
+    )
     return (
         <div className={styles.theHome}>
 
@@ -28,8 +37,21 @@ export function TheApp({user}) {
                 backIcon={false}
                 ghost={false}
                 onBack={() => null}
-                title={<span><Button className={styles.hambButton} onClick={()=>setMobileOpen(!mobileOpen)} type="primary" ghost={true} icon={<MenuOutlined />} /><img src={logo} className={styles.title}/></span>}
-                extra={<a className={styles.itesaLogo} href={'https://itesa.co'}><img src={itesa} className={styles.title}/></a>}
+                title={
+                    <span>
+                        <Button className={styles.hambButton}
+                            onClick={()=>setMobileOpen(!mobileOpen)}
+                            type="primary" ghost={true}
+                            icon={<MenuOutlined />}
+                        />
+                        <img src={logo} className={styles.title}/>
+                    </span>
+                    }
+                extra={
+                    <a className={styles.itesaLogo} href={'https://itesa.co'}>
+                        <img src={itesa} className={styles.title}/>
+                    </a>
+                    }
             />
             <Layout style={{backgroundColor: '#ffffff'}}>
                 <TheDrawer setItemOpen={setItemOpen}/>
@@ -38,7 +60,7 @@ export function TheApp({user}) {
                         <Breadcrumb className={styles.breadcrumb}>
                             <Breadcrumb.Item>{itemOpen}</Breadcrumb.Item>
                         </Breadcrumb>
-
+                        {contentBody()}
 
                 </Content>
             </Layout>
