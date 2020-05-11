@@ -24,10 +24,10 @@ export function TheApp({user}) {
     const {id} = user;
     
     const contentBody = () => (
-        (itemOpen == 'pedidos' && <TableShops itemOpen id={id} />) ||
-        (itemOpen == 'tiendas' && <TableShops itemOpen id={id} />) ||
-        (itemOpen == 'Productos' && <TableShops itemOpen id={id} />) ||
-        (itemOpen == 'Mi cuenta' && <TableShops itemOpen id={id} />)
+        (itemOpen === 'pedidos' && <TableShops id={id} />) ||
+        (itemOpen === 'tiendas' && <TableShops id={id} />) ||
+        (itemOpen === 'Productos' && <TableShops id={id} />) ||
+        (itemOpen === 'Mi cuenta' && <TableShops id={id} />)
     )
     return (
         <div className={styles.theHome}>

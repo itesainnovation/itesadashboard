@@ -11,7 +11,7 @@ export function Drawer({setItemOpen}) {
 
     });
     const handleClick = e => {
-        setItemOpen(e.keyPath);
+        setItemOpen(e.keyPath.toString());
     };
     return (
         <Sider breakpoint="md" collapsedWidth="0" className={styles.drawer} width={200} style={{ background: '#fff' }}>

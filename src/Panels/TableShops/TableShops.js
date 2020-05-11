@@ -33,9 +33,9 @@ const columns = [
                 }
             >
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                    {type == 1 && 'Envíos'}
-                    {type == 2 && 'Takeaway'}
-                    {type == 3 && 'Envíos y Takeaway'}
+                    {type === '1' && 'Envíos'}
+                    {type === '2' && 'Takeaway'}
+                    {type === '3' && 'Envíos y Takeaway'}
                     {' '} <DownOutlined />
                 </a>
             </Dropdown>
@@ -66,7 +66,7 @@ const columns = [
 ];
 
 
-const TableShops = ({ itemOpen, id }) => {
+const TableShops = ({ id }) => {
     const [shopList, setShopList] = useState([])
 
     useEffect(() => {
@@ -89,7 +89,6 @@ const TableShops = ({ itemOpen, id }) => {
 
     return (
         <div>
-            {itemOpen}
             <Table
                 bordered
                 dataSource={shopList}
