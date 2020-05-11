@@ -6,7 +6,7 @@ import itesa from '../images/logo-itesa.png'
 import {Drawer as TheDrawer} from "../Drawers/Drawer";
 import {DrawerMobile} from "../Drawers/DrawerMobile";
 import {MenuOutlined} from '@ant-design/icons';
-import TableShops from '../Components/Table/TableShops';
+import TableShops from '../Panels/TableShops/TableShops';
 
 
 const { Header, Content, Footer, Sider } = Layout;

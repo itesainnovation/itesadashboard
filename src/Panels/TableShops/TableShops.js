@@ -4,23 +4,6 @@ import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 
-let db = firebase.firestore();
-
-
-// const dataSource = [
-//     {
-//         key: '1',
-//         name: 'Mike',
-//         age: 32,
-//         address: '10 Downing Street',
-//     },
-//     {
-//         key: '2',
-//         name: 'John',
-//         age: 42,
-//         address: '10 Downing Street',
-//     },
-// ];
 
 const columns = [
     {
@@ -73,12 +56,12 @@ const columns = [
         key: 'Acciones',
         render: () => (
             <>
-                {/* <Button type="link" icon={<SaveOutlined />}>Guardar</Button> */}
+                {false && <Button type="link" icon={<SaveOutlined />}>Guardar</Button>}
                 <Button type="link" icon={<EditOutlined />}>Editar</Button>
                 <Button type="link" icon={<DeleteOutlined />}>Eliminar</Button>
             </>
 
-        )
+        ),
     },
 ];
 
@@ -88,13 +71,13 @@ const TableShops = ({ itemOpen, id }) => {
 
     useEffect(() => {
         if (id) {
+            let db = firebase.firestore();
 
             db.collection('shops').where('userID', '==', id)
                 .onSnapshot(function (docs) {
                     let theData = [];
                     docs.forEach(doc => {
                         const shop = doc.data();
-                        console.log(shop);
                         shop.key = doc.id;
 
                         theData = [...theData, shop]
@@ -107,9 +90,18 @@ const TableShops = ({ itemOpen, id }) => {
     return (
         <div>
             {itemOpen}
-            <Table dataSource={shopList} columns={columns} />
+            <Table
+                bordered
+                dataSource={shopList}
+                columns={columns}
+                /* scroll={{ x: 'max-content' }} */
+            />
         </div>
     );
 };
 
 export default TableShops;
+
+
+
+
