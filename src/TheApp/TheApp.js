@@ -60,7 +60,9 @@ export function TheApp({user}) {
                         <Breadcrumb className={styles.breadcrumb}>
                             <Breadcrumb.Item>{itemOpen}</Breadcrumb.Item>
                         </Breadcrumb>
+                        <div className={styles.scroll}>
                         {contentBody()}
+                        </div>
 
                 </Content>
             </Layout>

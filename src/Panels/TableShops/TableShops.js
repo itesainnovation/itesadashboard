@@ -3,6 +3,7 @@ import { Table, Switch, Dropdown, Menu, Button } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import styles from './table-shops.module.scss';
 
 
 const columns = [
@@ -19,7 +20,7 @@ const columns = [
 
             <Dropdown trigger={['click']}
                 overlay={
-                    <Menu className=" text-center">
+                    <Menu>
                         <Menu.Item key="0">
                             <span> Envíos </span>
                         </Menu.Item>
@@ -32,7 +33,7 @@ const columns = [
                     </Menu>
                 }
             >
-                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                <a className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
                     {type === '1' && 'Envíos'}
                     {type === '2' && 'Takeaway'}
                     {type === '3' && 'Envíos y Takeaway'}
@@ -88,7 +89,7 @@ const TableShops = ({ id }) => {
     }, [id])
 
     return (
-        <div>
+        <div className={styles.tableShops}>
             <Table
                 bordered
                 dataSource={shopList}
