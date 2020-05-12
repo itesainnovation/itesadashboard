@@ -3,6 +3,7 @@ import { Table, Switch, Dropdown, Menu, Button, Spin } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import styles from './tableproducts.module.scss';
 
 
 const columns = [

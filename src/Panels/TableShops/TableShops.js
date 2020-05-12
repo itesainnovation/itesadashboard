@@ -3,7 +3,7 @@ import { Table, Switch, Dropdown, Menu, Button, Spin } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
-import styles from './table-shops.module.scss';
+import styles from './tableshops.module.scss';
 
 
 const columns = [
@@ -33,7 +33,8 @@ const columns = [
                     </Menu>
                 }
             >
-                <a className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
+                {/*  eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a href={undefined} className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
                     {type === '1' && 'Envíos'}
                     {type === '2' && 'Takeaway'}
                     {type === '3' && 'Envíos y Takeaway'}

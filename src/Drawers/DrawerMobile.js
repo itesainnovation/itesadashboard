@@ -10,7 +10,7 @@ export function DrawerMobile({setItemOpen, mobileOpen, setMobileOpen}) {
     });
     const handleClick = e => {
 
-        setItemOpen(e.keyPath);
+        setItemOpen(e.keyPath.toString());
 
     };
     return (
