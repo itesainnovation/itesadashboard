@@ -7,7 +7,7 @@ import {Drawer as TheDrawer} from "../Drawers/Drawer";
 import {DrawerMobile} from "../Drawers/DrawerMobile";
 import {MenuOutlined} from '@ant-design/icons';
 import TableShops from '../Panels/TableShops/TableShops';
-
+import TableProducts from '../Panels/TableProducts/TableProducts';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
@@ -26,12 +26,12 @@ export function TheApp({user}) {
     const contentBody = () => (
         (itemOpen === 'pedidos' && <TableShops id={id} />) ||
         (itemOpen === 'tiendas' && <TableShops id={id} />) ||
-        (itemOpen === 'Productos' && <TableShops id={id} />) ||
+        (itemOpen === 'Productos' && <TableProducts id={id} />) ||
         (itemOpen === 'Mi cuenta' && <TableShops id={id} />)
     )
     return (
         <div className={styles.theHome}>
-
+            
             <PageHeader
                 className={styles.appBar}
                 backIcon={false}

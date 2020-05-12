@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Switch, Dropdown, Menu, Button } from 'antd';
+import { Table, Switch, Dropdown, Menu, Button, Spin } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
@@ -68,7 +68,7 @@ const columns = [
 
 
 const TableShops = ({ id }) => {
-    const [shopList, setShopList] = useState([])
+    const [shops, setShops] = useState([])
 
     useEffect(() => {
         if (id) {
@@ -83,19 +83,20 @@ const TableShops = ({ id }) => {
 
                         theData = [...theData, shop]
                     })
-                    setShopList(theData);
+                    setShops(theData);
                 })
         }
     }, [id])
 
     return (
-        <div className={styles.tableShops}>
-            <Table
-                bordered
-                dataSource={shopList}
-                columns={columns}
-                /* scroll={{ x: 'max-content' }} */
-            />
+        <div className={styles.tableContent}>
+            <Spin spinning={!shops.length} delay={400}>
+                <Table
+                    bordered
+                    dataSource={shops}
+                    columns={columns}
+                />
+            </Spin>
         </div>
     );
 };
