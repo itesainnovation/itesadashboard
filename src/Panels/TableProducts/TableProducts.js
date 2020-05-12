@@ -12,42 +12,11 @@ const columns = [
         key: 'name',
     },
     {
-        title: 'Modalidad',
-        dataIndex: 'type',
-        key: 'type',
-        render: (type) => (
-
-            <Dropdown trigger={['click']}
-                overlay={
-                    <Menu>
-                        <Menu.Item key="0">
-                            <span> Envíos </span>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item key="1">
-                            <span> Takeaway </span>
-                        </Menu.Item>
-                        <Menu.Divider />
-                        <Menu.Item key="3"> Envíos y Takeaway </Menu.Item>
-                    </Menu>
-                }
-            >
-                <a className={'maxContent ant-dropdown-link'} onClick={e => e.preventDefault()}>
-                    {type === '1' && 'Envíos'}
-                    {type === '2' && 'Takeaway'}
-                    {type === '3' && 'Envíos y Takeaway'}
-                    {' '} <DownOutlined />
-                </a>
-            </Dropdown>
-
-        )
-    },
-    {
-        title: 'Habilitada',
-        dataIndex: 'enabled',
-        key: 'enabled',
-        render: (bool) => (
-            <Switch checked={bool} />
+        title: 'Precio',
+        dataIndex: 'price',
+        key: 'price',
+        render: (price) => (
+            '$ ' + price
         )
     },
     {
@@ -62,6 +31,11 @@ const columns = [
             </>
 
         ),
+    },
+    {
+        title: 'Tiendas',
+        dataIndex: 'shops',
+        key: 'shops',
     },
 ];
 
