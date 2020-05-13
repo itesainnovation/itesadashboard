@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Switch, Dropdown, Menu, Button, Spin, Input } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
-import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styles from './tableshops.module.scss';
 
 let db = firebase.firestore();
@@ -30,28 +30,22 @@ const TableShops = ({ id }) => {
     }, [id])
 
 
-    const handleUpdate = (key) => () => {
+    const handleUpdate = (key) => async () => {
         const shopDoc = db.collection('shops/').doc(key);
-        
-        shopDoc.set({
-            name: edit,
-        }, { merge: true });
-        
+
+        await shopDoc.set({ name: edit }, { merge: true });
+        setEditable('');
     }
 
-    
+
     const handleSwitch = (key) => (check) => {
         const shopDoc = db.collection('shops/').doc(key);
 
-        shopDoc.set({
-            enabled: check,
-        }, { merge: true });
+        shopDoc.set({ enabled: check }, { merge: true });
     };
 
 
-    const handleChange = (shop) => (e) => {
-        console.log('shop', shop);
-
+    const handleChange = (e) => {
         setEdit(e.target.value)
     }
 
@@ -61,14 +55,19 @@ const TableShops = ({ id }) => {
             title: 'Nombre',
             dataIndex: 'name',
             key: 'name',
-            render: (name, shop) => (
-                (editable === shop.key) ? (
-                    <Input defaultValue={name} onChange={handleChange(shop)} style={{ width: 200 }} maxLength="30" />
+            render: (name, { key }) => (
+                (editable === key) ? (
+
+                    <Input defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" />
+
                 ) : (
+
                         <span style={{ width: 200, display: 'inline-block' }}>
                             {name}
                         </span>
+
                     )
+
             )
         },
         {
@@ -93,7 +92,7 @@ const TableShops = ({ id }) => {
                     }
                 >
                     {/*  eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a href={undefined} className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
+                    <a className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
                         {type === '1' && 'Envíos'}
                         {type === '2' && 'Takeaway'}
                         {type === '3' && 'Envíos y Takeaway'}
@@ -107,7 +106,7 @@ const TableShops = ({ id }) => {
             title: 'Habilitada',
             dataIndex: 'enabled',
             key: 'enabled',
-            render: (bool, {key}) => (
+            render: (bool, { key }) => (
                 <Switch checked={bool} onClick={handleSwitch(key)} />
             )
         },
@@ -116,23 +115,31 @@ const TableShops = ({ id }) => {
             dataIndex: 'key',
             key: 'key',
             render: (key) => (
-                <>
-                    <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
-                        Editar
-                    </Button>
-                    <Button type="link" icon={<DeleteOutlined />}>
-                        Eliminar
-                    </Button>
 
+                (editable === key) ? (
 
-                    {(editable === key) &&
+                    <>
                         <Button onClick={handleUpdate(key)} type="link" icon={<SaveOutlined />}>
                             Guardar
                         </Button>
-                    }
-                </>
+                        <Button onClick={() => setEditable('')} type="link" icon={<CloseCircleOutlined />}>
+                            Cancelar
+                        </Button>
+                    </>
 
-            ),
+                ) : (
+
+                    <>
+                        <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
+                            Editar
+                        </Button>
+                        <Button type="link" icon={<DeleteOutlined />}>
+                            Eliminar
+                        </Button>
+                    </>
+
+                )
+            )
         },
     ];
 
