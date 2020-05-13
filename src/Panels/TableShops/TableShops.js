@@ -30,11 +30,11 @@ const TableShops = ({ id }) => {
     }, [id])
 
 
-    const handleUpdate = (key) => async () => {
+    const handleType = (key) => (e) => {
+        const type = e.key;
         const shopDoc = db.collection('shops/').doc(key);
 
-        await shopDoc.set({ name: edit }, { merge: true });
-        setEditable('');
+        shopDoc.set({ type }, { merge: true });
     }
 
 
@@ -43,10 +43,22 @@ const TableShops = ({ id }) => {
 
         shopDoc.set({ enabled: check }, { merge: true });
     };
+    
+
+    const handleUpdate = (key) => async () => {
+        const shopDoc = db.collection('shops/').doc(key);
+
+        await shopDoc.set({ name: edit }, { merge: true });
+        setEditable('');
+    }
 
 
     const handleChange = (e) => {
         setEdit(e.target.value)
+    }
+
+    const handleDelete = (key) => () => {
+        db.collection('shops/').doc(key).delete();
     }
 
 
@@ -62,32 +74,32 @@ const TableShops = ({ id }) => {
 
                 ) : (
 
-                        <span style={{ width: 200, display: 'inline-block' }}>
-                            {name}
-                        </span>
+                    <span style={{ width: 200, display: 'inline-block' }}> {name} </span>
 
-                    )
-
+                )
             )
         },
         {
             title: 'Modalidad',
             dataIndex: 'type',
             key: 'type',
-            render: (type) => (
+            render: (type , {key}) => (
 
-                <Dropdown trigger={['click']}
+                <Dropdown
+                    trigger={['click']}
                     overlay={
                         <Menu>
-                            <Menu.Item key="0">
+                            <Menu.Item key="1" onClick={handleType(key)}>
                                 <span> Envíos </span>
                             </Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item key="1">
+                            <Menu.Item key="2" onClick={handleType(key)}>
                                 <span> Takeaway </span>
                             </Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item key="3"> Envíos y Takeaway </Menu.Item>
+                            <Menu.Item key="3" onClick={handleType(key)}>
+                                Envíos y Takeaway
+                            </Menu.Item>
                         </Menu>
                     }
                 >
@@ -133,7 +145,7 @@ const TableShops = ({ id }) => {
                         <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
                             Editar
                         </Button>
-                        <Button type="link" icon={<DeleteOutlined />}>
+                        <Button onClick={handleDelete(key)} type="link" icon={<DeleteOutlined />}>
                             Eliminar
                         </Button>
                     </>
