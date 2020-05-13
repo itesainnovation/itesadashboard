@@ -23,7 +23,7 @@ export function TheApp({user}) {
 
     const {id} = user;
     
-    const contentBody = () => (
+    const contentBody =  (
         (itemOpen === 'pedidos' && <TableShops id={id} />) ||
         (itemOpen === 'tiendas' && <TableShops id={id} />) ||
         (itemOpen === 'Productos' && <TableProducts id={id} />) ||
@@ -61,7 +61,7 @@ export function TheApp({user}) {
                             <Breadcrumb.Item>{itemOpen}</Breadcrumb.Item>
                         </Breadcrumb>
                         <div className={styles.scroll}>
-                        {contentBody()}
+                        {contentBody}
                         </div>
 
                 </Content>
