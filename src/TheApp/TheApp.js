@@ -46,24 +46,23 @@ export function TheApp({user}) {
                         />
                         <img src={logo} className={styles.title}/>
                     </span>
-                    }
+                }
                 extra={
                     <a className={styles.itesaLogo} href={'https://itesa.co'}>
                         <img src={itesa} className={styles.title}/>
                     </a>
-                    }
+                }
             />
             <Layout style={{backgroundColor: '#ffffff'}}>
                 <TheDrawer setItemOpen={setItemOpen}/>
                 <DrawerMobile setItemOpen={setItemOpen} setMobileOpen={setMobileOpen} mobileOpen={mobileOpen}/>
                 <Content className={styles.content}>
-                        <Breadcrumb className={styles.breadcrumb}>
-                            <Breadcrumb.Item>{itemOpen}</Breadcrumb.Item>
-                        </Breadcrumb>
-                        <div className={styles.scroll}>
-                        {contentBody}
-                        </div>
-
+                    <Breadcrumb className={styles.breadcrumb}>
+                        <Breadcrumb.Item>{itemOpen}</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div>
+                    {contentBody}
+                    </div>
                 </Content>
             </Layout>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Switch, Dropdown, Menu, Button, Spin, Input } from 'antd';
+import { Table, Switch, Dropdown, Menu, Button, Spin, Input, Popconfirm } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -10,7 +10,8 @@ let db = firebase.firestore();
 const TableShops = ({ id }) => {
     const [shops, setShops] = useState([])
     const [editable, setEditable] = useState('')
-    const [edit, setEdit] = useState('')
+    const [edit, setEdit] = useState({})
+    // const [count, setCount] = useState(0)
 
     useEffect(() => {
         if (id) {
@@ -25,40 +26,78 @@ const TableShops = ({ id }) => {
                         theData = [...theData, shop]
                     })
                     setShops(theData);
+                    setEditable('');
                 })
         }
     }, [id])
 
 
     const handleType = (key) => (e) => {
-        const type = e.key;
+        const type = Number(e.key);
         const shopDoc = db.collection('shops/').doc(key);
 
         shopDoc.set({ type }, { merge: true });
     }
 
 
-    const handleSwitch = (key) => (check) => {
+    const handleSwitch = (key) => (enabled) => {
+        if (editable !== '0') {
         const shopDoc = db.collection('shops/').doc(key);
 
-        shopDoc.set({ enabled: check }, { merge: true });
+        shopDoc.set({ enabled }, { merge: true });
+        } else {
+            setEdit({...edit, enabled})
+        }
     };
-    
 
-    const handleUpdate = (key) => async () => {
-        const shopDoc = db.collection('shops/').doc(key);
 
-        await shopDoc.set({ name: edit }, { merge: true });
-        setEditable('');
+    const handleUpdate = (shop) => async () => {
+        if (editable !== '0') {
+            const shopDoc = db.collection('shops/').doc(shop.key);
+            
+            await shopDoc.set({ ...edit }, { merge: true });
+        } else {
+            // const {key, ...newShop} = shop;
+            console.log(edit);
+            
+            // const shopDoc = db.collection('shops/').add();
+            
+        }
     }
 
 
     const handleChange = (e) => {
-        setEdit(e.target.value)
+        const {name, value} = e.target;
+        setEdit({...edit, [name]: value})
     }
+
 
     const handleDelete = (key) => () => {
         db.collection('shops/').doc(key).delete();
+    }
+
+
+    const handleAdd = () => {
+        setEdit({
+            // name: '',
+            type: 0,
+            enabled: false,
+            // key: '0',
+            userID: id
+        })
+        setShops([...shops, {key: '0'}])
+        setEditable('0');
+    }
+
+
+    const handleCancel = () => {
+        if (editable !== '0') {
+            setEditable('')
+        } else {
+            const removed = shops.filter( (s) => s.key !== '0' )
+            setShops([...removed ])
+            setEditable('');
+        }
     }
 
 
@@ -70,7 +109,7 @@ const TableShops = ({ id }) => {
             render: (name, { key }) => (
                 (editable === key) ? (
 
-                    <Input defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" />
+                    <Input name="name" defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" required />
 
                 ) : (
 
@@ -83,33 +122,33 @@ const TableShops = ({ id }) => {
             title: 'Modalidad',
             dataIndex: 'type',
             key: 'type',
-            render: (type , {key}) => (
+            render: (type, { key }) => (
 
                 <Dropdown
                     trigger={['click']}
                     overlay={
                         <Menu>
-                            <Menu.Item key="1" onClick={handleType(key)}>
+                            <Menu.Item key="0" onClick={handleType(key)}>
                                 <span> Envíos </span>
                             </Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item key="2" onClick={handleType(key)}>
+                            <Menu.Item key="1" onClick={handleType(key)}>
                                 <span> Takeaway </span>
                             </Menu.Item>
                             <Menu.Divider />
-                            <Menu.Item key="3" onClick={handleType(key)}>
+                            <Menu.Item key="2" onClick={handleType(key)}>
                                 Envíos y Takeaway
                             </Menu.Item>
                         </Menu>
                     }
                 >
                     {/*  eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
-                        {type === '1' && 'Envíos'}
-                        {type === '2' && 'Takeaway'}
-                        {type === '3' && 'Envíos y Takeaway'}
+                    <Button type="link" className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
+                        {type === 0 && 'Envíos'}
+                        {type === 1 && 'Takeaway'}
+                        {type === 2 && 'Envíos y Takeaway'}
                         {' '} <DownOutlined />
-                    </a>
+                    </Button>
                 </Dropdown>
 
             )
@@ -119,22 +158,22 @@ const TableShops = ({ id }) => {
             dataIndex: 'enabled',
             key: 'enabled',
             render: (bool, { key }) => (
-                <Switch checked={bool} onClick={handleSwitch(key)} />
+                <Switch checked={bool && bool} onClick={handleSwitch(key)} />
             )
         },
         {
             title: 'Acciones',
             dataIndex: 'key',
             key: 'key',
-            render: (key) => (
+            render: (key, shop) => (
 
                 (editable === key) ? (
 
                     <>
-                        <Button onClick={handleUpdate(key)} type="link" icon={<SaveOutlined />}>
+                        <Button onClick={handleUpdate(shop)} type="link" icon={<SaveOutlined />}>
                             Guardar
                         </Button>
-                        <Button onClick={() => setEditable('')} type="link" icon={<CloseCircleOutlined />}>
+                        <Button onClick={handleCancel} type="link" icon={<CloseCircleOutlined />}>
                             Cancelar
                         </Button>
                     </>
@@ -145,12 +184,17 @@ const TableShops = ({ id }) => {
                         <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
                             Editar
                         </Button>
-                        <Button onClick={handleDelete(key)} type="link" icon={<DeleteOutlined />}>
-                            Eliminar
-                        </Button>
-                    </>
-
-                )
+                        <Popconfirm
+                            title="¿Desea eliminar la tienda?"
+                            onConfirm={handleDelete(key)}
+                            okText="Eliminar" cancelText="Volver"
+                        >
+                            <Button type="link" icon={<DeleteOutlined />}>
+                                Eliminar
+                            </Button>
+                        </Popconfirm>
+                        </>
+                    )
             )
         },
     ];
@@ -158,13 +202,19 @@ const TableShops = ({ id }) => {
 
     return (
         <div className={styles.tableContent}>
-            <Spin spinning={!shops.length} delay={400}>
-                <Table
-                    bordered
-                    dataSource={shops}
-                    columns={columns}
-                />
-            </Spin>
+            <div className={styles.scrollTable}>
+                <Spin spinning={!shops.length} delay={400}>
+                    <Table
+                        bordered
+                        dataSource={shops}
+                        columns={columns}
+                    />
+                </Spin>
+            </div>
+            <Button onClick={handleAdd} type="primary" disabled={editable !== ''} style={{ float: 'right', position: "relative" }}>
+                <span style={{ position: "relative", left: '-0.6rem'}}>+</span>
+                Agregar nueva tienda
+            </Button>
         </div>
     );
 };

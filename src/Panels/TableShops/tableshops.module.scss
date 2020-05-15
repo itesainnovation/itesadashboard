@@ -4,4 +4,9 @@
         width: max-content;
         text-transform: none;
     }
+    @media (max-width: 991px) {
+        .scrollTable {
+          overflow-x: scroll;
+        }
+    }
 }
