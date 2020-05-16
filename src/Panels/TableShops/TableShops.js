@@ -5,6 +5,7 @@ import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styles from './tableshops.module.scss';
 import DropDownTypes from '../Components/DropDownTypes/DropDownTypes';
+import ActionsCell from '../Components/ActionsCell/ActionsCell';
 
 let db = firebase.firestore();
 
@@ -46,7 +47,7 @@ const TableShops = ({ userID }) => {
 
     const handleSwitchType = (id, prop) => {
         if (editable === '0') {
-            setEdit({ ...edit, prop });
+            setEdit({ ...edit, ...prop });
         } else {
             fsShopSet(id, prop);
         }
@@ -143,35 +144,7 @@ const TableShops = ({ userID }) => {
             dataIndex: 'key',
             key: 'key',
             render: (key) => (
-
-                (editable === key) ? (
-
-                    <>
-                        <Button onClick={handleUpdate(key)} type="link" icon={<SaveOutlined />} disabled={edit.name === ''}>
-                            Guardar
-                        </Button>
-                        <Button onClick={handleCancel} type="link" icon={<CloseCircleOutlined />}>
-                            Cancelar
-                        </Button>
-                    </>
-
-                ) : (
-
-                        <>
-                            <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
-                                Editar
-                            </Button>
-                            <Popconfirm
-                                title="¿Desea eliminar la tienda?"
-                                onConfirm={handleDelete(key)}
-                                okText="Eliminar" cancelText="Volver"
-                            >
-                                <Button type="link" icon={<DeleteOutlined />}>
-                                    Eliminar
-                                </Button>
-                            </Popconfirm>
-                        </>
-                    )
+                <ActionsCell editable={editable} edit={edit} id={key} handleUpdate={handleUpdate} handleCancel={handleCancel} handleDelete={handleDelete} setEditable={setEditable} />
             )
         },
     ];
