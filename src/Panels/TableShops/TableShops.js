@@ -27,46 +27,49 @@ const TableShops = ({ id }) => {
                     })
                     setShops(theData);
                     setEditable('');
+                    
                 })
         }
     }, [id])
 
+    const handleFire = (key, prop) => {
+        const shopDoc = db.collection('shops/').doc(key);
+        shopDoc.set(prop, { merge: true });
+    }
+
 
     const handleType = (key) => (e) => {
         const type = Number(e.key);
-        if (editable === '0') {
-            setEdit({ ...edit, type })
-        } else {
-            const shopDoc = db.collection('shops/').doc(key);
 
-            shopDoc.set({ type }, { merge: true });
+        if (editable === '0') {
+            setEdit({ ...edit, type });
+        } else {
+            handleFire(key, {type});
         }
     }
 
 
     const handleSwitch = (key) => (enabled) => {
+        console.log(edit);
         if (editable === '0') {
             setEdit({ ...edit, enabled })
         } else {
-            const shopDoc = db.collection('shops/').doc(key);
-
-            shopDoc.set({ enabled }, { merge: true });
+            handleFire(key, {enabled})
         }
     };
 
 
-    const handleUpdate = ({key}) => async () => {
-        console.log(edit);
-        
-        if (edit.name !== '') {
-            const shopsColl = db.collection('shops/');
+    const handleUpdate = ({ key }) => async () => {
+        const shopsColl = db.collection('shops/');
 
-            if (editable === '0') {
-                shopsColl.add(edit);
-            } else {
-                shopsColl.doc(key).set({ ...edit }, { merge: true });
-            }
+        if (editable === '0') {
+            await shopsColl.add(edit);
+        } else {
+            // handleFire(key, {type});
+            await shopsColl.doc(key).set({ ...edit }, { merge: true });
         }
+        setEditable('');
+        setEdit({});
     }
 
 
@@ -86,7 +89,6 @@ const TableShops = ({ id }) => {
             name: '',
             type: 1,
             enabled: false,
-            // key: '0',
             userID: id
         })
         setShops([...shops, { key: '0' }])
@@ -100,6 +102,7 @@ const TableShops = ({ id }) => {
             setShops([...removed])
         }
         setEditable('');
+        setEdit({});
     }
 
 
@@ -111,11 +114,11 @@ const TableShops = ({ id }) => {
             render: (name, { key }) => (
                 (editable === key) ? (
 
-                    <Input name="name" defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" autoComplete="off" />
+                    <Input name="name" defaultValue={name} onChange={handleChange} className={styles.w200} maxLength="30" autoComplete="off" />
 
                 ) : (
 
-                    <span style={{ width: 200, display: 'inline-block' }}> {name} </span>
+                    <span className={styles.w200}> {name} </span>
 
                 )
             )
@@ -220,8 +223,8 @@ const TableShops = ({ id }) => {
                     />
                 </Spin>
             </div>
-            <Button onClick={handleAdd} type="primary" disabled={editable !== ''} style={{ float: 'right', position: "relative" }}>
-                <span style={{ position: "relative", left: '-0.6rem' }}>+</span>
+            <Button onClick={handleAdd} type="primary" disabled={editable !== ''} className={styles.btnRelative}>
+                <span className={styles.btnIcon}>+</span>
                 Agregar nueva tienda
             </Button>
         </div>

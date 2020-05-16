@@ -4,6 +4,18 @@
         width: max-content;
         text-transform: none;
     }
+    .w200 {
+        width: 200px;
+        display: inline-block;
+    }
+    .btnRelative {
+        float: right;
+        position: relative;
+    }
+    .btnIcon {
+        position: relative;
+        left: -0.6rem;
+    }
     @media (max-width: 991px) {
         .scrollTable {
           overflow-x: scroll;
