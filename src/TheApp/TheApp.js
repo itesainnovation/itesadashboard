@@ -21,13 +21,13 @@ export function TheApp({user}) {
 
     },[]);
 
-    const {id} = user;
+    const {userID} = user;
     
     const contentBody =  (
-        (itemOpen === 'pedidos' && <TableShops id={id} />) ||
-        (itemOpen === 'tiendas' && <TableShops id={id} />) ||
-        (itemOpen === 'Productos' && <TableProducts id={id} />) ||
-        (itemOpen === 'Mi cuenta' && <TableShops id={id} />)
+        (itemOpen === 'pedidos' && <TableShops userID={userID} />) ||
+        (itemOpen === 'tiendas' && <TableShops userID={userID} />) ||
+        (itemOpen === 'Productos' && <TableProducts userID={userID} />) ||
+        (itemOpen === 'Mi cuenta' && <TableShops userID={userID} />)
     )
     return (
         <div className={styles.theHome}>

@@ -23,7 +23,7 @@ function App() {
                     .onSnapshot(function (docs) {
                         docs.forEach(function (doc) {
                             let theUser = doc.data();
-                            theUser.id = doc.id;
+                            theUser.userID = doc.id;
                             setUser(theUser);
                         })
                     })

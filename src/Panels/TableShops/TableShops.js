@@ -4,19 +4,25 @@ import 'firebase/firestore';
 import firebase from "../../utils/firebase";
 import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styles from './tableshops.module.scss';
+import DropDownTypes from '../Components/DropDownTypes/DropDownTypes';
 
 let db = firebase.firestore();
 
-const TableShops = ({ id }) => {
+const fsShopSet = (id, prop) => {
+    const shopDoc = db.collection('shops/').doc(id);
+    shopDoc.set(prop, { merge: true });
+}
+
+
+const TableShops = ({ userID }) => {
     const [shops, setShops] = useState([])
     const [editable, setEditable] = useState('')
     const [edit, setEdit] = useState({})
-    // const [count, setCount] = useState(0)
 
     useEffect(() => {
-        if (id) {
+        if (userID) {
 
-            db.collection('shops').where('userID', '==', id)
+            db.collection('shops').where('userID', '==', userID)
                 .onSnapshot(function (docs) {
                     let theData = [];
                     docs.forEach(doc => {
@@ -27,55 +33,45 @@ const TableShops = ({ id }) => {
                     })
                     setShops(theData);
                     setEditable('');
-                    
                 })
         }
-    }, [id])
+    }, [userID])
 
-    const handleFire = (key, prop) => {
-        const shopDoc = db.collection('shops/').doc(key);
-        shopDoc.set(prop, { merge: true });
-    }
-
-
-    const handleType = (key) => (e) => {
-        const type = Number(e.key);
-
-        if (editable === '0') {
-            setEdit({ ...edit, type });
-        } else {
-            handleFire(key, {type});
-        }
-    }
-
-
-    const handleSwitch = (key) => (enabled) => {
-        console.log(edit);
-        if (editable === '0') {
-            setEdit({ ...edit, enabled })
-        } else {
-            handleFire(key, {enabled})
-        }
-    };
-
-
-    const handleUpdate = ({ key }) => async () => {
-        const shopsColl = db.collection('shops/');
-
-        if (editable === '0') {
-            await shopsColl.add(edit);
-        } else {
-            // handleFire(key, {type});
-            await shopsColl.doc(key).set({ ...edit }, { merge: true });
-        }
-        setEditable('');
-        setEdit({});
-    }
-
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEdit({ ...edit, [name]: value })
+    }
+
+
+    const handleSwitchType = (id, prop) => {
+        if (editable === '0') {
+            setEdit({ ...edit, prop });
+        } else {
+            fsShopSet(id, prop);
+        }
+    }
+
+
+    const handleType = (id) => (e) => {
+        const type = Number(e.key);
+        handleSwitchType(id, { type });
+    }
+
+
+    const handleSwitch = (id) => (enabled) => {
+        handleSwitchType(id, { enabled });
+    };
+
+
+    const handleUpdate = (id) => async () => {
+        if (editable === '0') {
+            await db.collection('shops/').add(edit);
+        } else {
+            fsShopSet(id, {...edit});
+        }
+        setEditable('');
+        setEdit({});
     }
 
 
@@ -84,12 +80,12 @@ const TableShops = ({ id }) => {
     }
 
 
-    const handleAdd = () => {
+    const handleNew = () => {
         setEdit({
             name: '',
             type: 1,
             enabled: false,
-            userID: id
+            userID
         })
         setShops([...shops, { key: '0' }])
         setEditable('0');
@@ -127,38 +123,7 @@ const TableShops = ({ id }) => {
             title: 'Modalidad',
             dataIndex: 'type',
             key: 'type',
-            render: (type, { key }) => {
-                if (key === '0') {
-                    type = edit.type;
-                }
-                return (
-                    <Dropdown
-                        trigger={['click']}
-                        overlay={
-                            <Menu>
-                                <Menu.Item key="0" onClick={handleType(key)}>
-                                    <span> Envíos </span>
-                                </Menu.Item>
-                                <Menu.Divider />
-                                <Menu.Item key="1" onClick={handleType(key)}>
-                                    <span> Takeaway </span>
-                                </Menu.Item>
-                                <Menu.Divider />
-                                <Menu.Item key="2" onClick={handleType(key)}>
-                                    Envíos y Takeaway
-                            </Menu.Item>
-                            </Menu>
-                        }
-                    >
-                        <Button type="link" className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
-                            {type === 0 && 'Envíos'}
-                            {type === 1 && 'Takeaway'}
-                            {type === 2 && 'Envíos y Takeaway'}
-                            {' '} <DownOutlined />
-                        </Button>
-                    </Dropdown>
-                )
-            }
+            render: (type, { key }) => ( <DropDownTypes type={type} id={key} edit={edit} handleType={handleType} /> )
         },
         {
             title: 'Habilitada',
@@ -177,12 +142,12 @@ const TableShops = ({ id }) => {
             title: 'Acciones',
             dataIndex: 'key',
             key: 'key',
-            render: (key, shop) => (
+            render: (key) => (
 
                 (editable === key) ? (
 
                     <>
-                        <Button onClick={handleUpdate(shop)} type="link" icon={<SaveOutlined />} disabled={edit.name === ''}>
+                        <Button onClick={handleUpdate(key)} type="link" icon={<SaveOutlined />} disabled={edit.name === ''}>
                             Guardar
                         </Button>
                         <Button onClick={handleCancel} type="link" icon={<CloseCircleOutlined />}>
@@ -223,7 +188,7 @@ const TableShops = ({ id }) => {
                     />
                 </Spin>
             </div>
-            <Button onClick={handleAdd} type="primary" disabled={editable !== ''} className={styles.btnRelative}>
+            <Button onClick={handleNew} type="primary" disabled={editable !== ''} className={styles.btnRelative}>
                 <span className={styles.btnIcon}>+</span>
                 Agregar nueva tienda
             </Button>
