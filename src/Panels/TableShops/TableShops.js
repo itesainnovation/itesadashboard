@@ -34,41 +34,45 @@ const TableShops = ({ id }) => {
 
     const handleType = (key) => (e) => {
         const type = Number(e.key);
-        const shopDoc = db.collection('shops/').doc(key);
+        if (editable === '0') {
+            setEdit({ ...edit, type })
+        } else {
+            const shopDoc = db.collection('shops/').doc(key);
 
-        shopDoc.set({ type }, { merge: true });
+            shopDoc.set({ type }, { merge: true });
+        }
     }
 
 
     const handleSwitch = (key) => (enabled) => {
-        if (editable !== '0') {
-        const shopDoc = db.collection('shops/').doc(key);
-
-        shopDoc.set({ enabled }, { merge: true });
+        if (editable === '0') {
+            setEdit({ ...edit, enabled })
         } else {
-            setEdit({...edit, enabled})
+            const shopDoc = db.collection('shops/').doc(key);
+
+            shopDoc.set({ enabled }, { merge: true });
         }
     };
 
 
-    const handleUpdate = (shop) => async () => {
-        if (editable !== '0') {
-            const shopDoc = db.collection('shops/').doc(shop.key);
-            
-            await shopDoc.set({ ...edit }, { merge: true });
-        } else {
-            // const {key, ...newShop} = shop;
-            console.log(edit);
-            
-            // const shopDoc = db.collection('shops/').add();
-            
+    const handleUpdate = ({key}) => async () => {
+        console.log(edit);
+        
+        if (edit.name !== '') {
+            const shopsColl = db.collection('shops/');
+
+            if (editable === '0') {
+                shopsColl.add(edit);
+            } else {
+                shopsColl.doc(key).set({ ...edit }, { merge: true });
+            }
         }
     }
 
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setEdit({...edit, [name]: value})
+        const { name, value } = e.target;
+        setEdit({ ...edit, [name]: value })
     }
 
 
@@ -79,25 +83,23 @@ const TableShops = ({ id }) => {
 
     const handleAdd = () => {
         setEdit({
-            // name: '',
-            type: 0,
+            name: '',
+            type: 1,
             enabled: false,
             // key: '0',
             userID: id
         })
-        setShops([...shops, {key: '0'}])
+        setShops([...shops, { key: '0' }])
         setEditable('0');
     }
 
 
     const handleCancel = () => {
-        if (editable !== '0') {
-            setEditable('')
-        } else {
-            const removed = shops.filter( (s) => s.key !== '0' )
-            setShops([...removed ])
-            setEditable('');
+        if (editable === '0') {
+            const removed = shops.filter((s) => s.key !== '0')
+            setShops([...removed])
         }
+        setEditable('');
     }
 
 
@@ -109,7 +111,7 @@ const TableShops = ({ id }) => {
             render: (name, { key }) => (
                 (editable === key) ? (
 
-                    <Input name="name" defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" required />
+                    <Input name="name" defaultValue={name} onChange={handleChange} style={{ width: 200 }} maxLength="30" autoComplete="off" />
 
                 ) : (
 
@@ -122,44 +124,51 @@ const TableShops = ({ id }) => {
             title: 'Modalidad',
             dataIndex: 'type',
             key: 'type',
-            render: (type, { key }) => (
-
-                <Dropdown
-                    trigger={['click']}
-                    overlay={
-                        <Menu>
-                            <Menu.Item key="0" onClick={handleType(key)}>
-                                <span> Envíos </span>
+            render: (type, { key }) => {
+                if (key === '0') {
+                    type = edit.type;
+                }
+                return (
+                    <Dropdown
+                        trigger={['click']}
+                        overlay={
+                            <Menu>
+                                <Menu.Item key="0" onClick={handleType(key)}>
+                                    <span> Envíos </span>
+                                </Menu.Item>
+                                <Menu.Divider />
+                                <Menu.Item key="1" onClick={handleType(key)}>
+                                    <span> Takeaway </span>
+                                </Menu.Item>
+                                <Menu.Divider />
+                                <Menu.Item key="2" onClick={handleType(key)}>
+                                    Envíos y Takeaway
                             </Menu.Item>
-                            <Menu.Divider />
-                            <Menu.Item key="1" onClick={handleType(key)}>
-                                <span> Takeaway </span>
-                            </Menu.Item>
-                            <Menu.Divider />
-                            <Menu.Item key="2" onClick={handleType(key)}>
-                                Envíos y Takeaway
-                            </Menu.Item>
-                        </Menu>
-                    }
-                >
-                    {/*  eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <Button type="link" className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
-                        {type === 0 && 'Envíos'}
-                        {type === 1 && 'Takeaway'}
-                        {type === 2 && 'Envíos y Takeaway'}
-                        {' '} <DownOutlined />
-                    </Button>
-                </Dropdown>
-
-            )
+                            </Menu>
+                        }
+                    >
+                        <Button type="link" className={styles.maxContent + ' ant-dropdown-link'} onClick={e => e.preventDefault()}>
+                            {type === 0 && 'Envíos'}
+                            {type === 1 && 'Takeaway'}
+                            {type === 2 && 'Envíos y Takeaway'}
+                            {' '} <DownOutlined />
+                        </Button>
+                    </Dropdown>
+                )
+            }
         },
         {
             title: 'Habilitada',
             dataIndex: 'enabled',
             key: 'enabled',
-            render: (bool, { key }) => (
-                <Switch checked={bool && bool} onClick={handleSwitch(key)} />
-            )
+            render: (enabled, { key }) => {
+                if (key === '0') {
+                    enabled = edit.enabled;
+                }
+                return (
+                    <Switch checked={enabled} onClick={handleSwitch(key)} />
+                )
+            }
         },
         {
             title: 'Acciones',
@@ -170,7 +179,7 @@ const TableShops = ({ id }) => {
                 (editable === key) ? (
 
                     <>
-                        <Button onClick={handleUpdate(shop)} type="link" icon={<SaveOutlined />}>
+                        <Button onClick={handleUpdate(shop)} type="link" icon={<SaveOutlined />} disabled={edit.name === ''}>
                             Guardar
                         </Button>
                         <Button onClick={handleCancel} type="link" icon={<CloseCircleOutlined />}>
@@ -180,19 +189,19 @@ const TableShops = ({ id }) => {
 
                 ) : (
 
-                    <>
-                        <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
-                            Editar
-                        </Button>
-                        <Popconfirm
-                            title="¿Desea eliminar la tienda?"
-                            onConfirm={handleDelete(key)}
-                            okText="Eliminar" cancelText="Volver"
-                        >
-                            <Button type="link" icon={<DeleteOutlined />}>
-                                Eliminar
+                        <>
+                            <Button onClick={() => setEditable(key)} type="link" icon={<EditOutlined />}>
+                                Editar
                             </Button>
-                        </Popconfirm>
+                            <Popconfirm
+                                title="¿Desea eliminar la tienda?"
+                                onConfirm={handleDelete(key)}
+                                okText="Eliminar" cancelText="Volver"
+                            >
+                                <Button type="link" icon={<DeleteOutlined />}>
+                                    Eliminar
+                                </Button>
+                            </Popconfirm>
                         </>
                     )
             )
@@ -212,7 +221,7 @@ const TableShops = ({ id }) => {
                 </Spin>
             </div>
             <Button onClick={handleAdd} type="primary" disabled={editable !== ''} style={{ float: 'right', position: "relative" }}>
-                <span style={{ position: "relative", left: '-0.6rem'}}>+</span>
+                <span style={{ position: "relative", left: '-0.6rem' }}>+</span>
                 Agregar nueva tienda
             </Button>
         </div>
