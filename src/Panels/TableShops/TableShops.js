@@ -92,13 +92,24 @@ const TableShops = ({ userID }) => {
     }
 
 
-    const handleCancel = () => {
+    const removeUnsavedRow = () => {
         if (editable === '0') {
             const removed = shops.filter((s) => s.key !== '0')
             setShops([...removed])
         }
+    }
+
+
+    const handleCancel = () => {
+        removeUnsavedRow();
         setEditable('');
         setEdit({});
+    }
+    
+    
+    const handleEditable = (id) => {
+        removeUnsavedRow();
+        setEditable(id);
     }
 
 
@@ -149,7 +160,7 @@ const TableShops = ({ userID }) => {
             key: 'key',
             render: (key) => (
                 <ActionsCell values={{editable, edit, id: key}}
-                    handlers={{handleUpdate, handleCancel, handleDelete, setEditable}}
+                    handlers={{handleUpdate, handleCancel, handleDelete, handleEditable}}
                 />
             )
         },

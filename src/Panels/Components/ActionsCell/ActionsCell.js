@@ -4,13 +4,12 @@ import { SaveOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from 
 
 const ActionsCell = ({ values, handlers}) => {
     const { edit, editable, id } = values;
-    const { handleUpdate, handleCancel, handleDelete, setEditable } = handlers;
-    
+    const { handleUpdate, handleCancel, handleDelete, handleEditable } = handlers;
     return (
         (editable === id) ? (
 
             <>
-                <Button onClick={handleUpdate(id)} type="link" icon={<SaveOutlined />} disabled={edit.name === ''}>
+                <Button onClick={handleUpdate(id)} type="link" icon={<SaveOutlined />} disabled={!edit.name}>
                     Guardar
                 </Button>
                 <Button onClick={handleCancel} type="link" icon={<CloseCircleOutlined />}>
@@ -21,7 +20,7 @@ const ActionsCell = ({ values, handlers}) => {
         ) : (
             
                 <>
-                    <Button onClick={() => setEditable(id)} type="link" icon={<EditOutlined />}>
+                    <Button onClick={() => handleEditable(id)} type="link" icon={<EditOutlined />}>
                         Editar
                     </Button>
                     <Popconfirm
