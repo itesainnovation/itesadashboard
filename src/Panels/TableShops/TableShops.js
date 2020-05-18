@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Switch, Dropdown, Menu, Button, Spin, Input, Popconfirm } from 'antd';
+import { Table, Switch, Button, Spin, Input } from 'antd';
 import 'firebase/firestore';
 import firebase from "../../utils/firebase";
-import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import styles from './tableshops.module.scss';
 import DropDownTypes from '../Components/DropDownTypes/DropDownTypes';
 import ActionsCell from '../Components/ActionsCell/ActionsCell';
