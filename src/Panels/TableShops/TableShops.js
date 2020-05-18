@@ -45,8 +45,10 @@ const TableShops = ({ userID }) => {
     }
 
 
-    const handleSwitchType = (id, prop) => {
-        if (editable === '0') {
+    const propsSetter = (id, prop) => {
+        console.log(id);
+        
+        if (id === '0') {
             setEdit({ ...edit, ...prop });
         } else {
             fsShopSet(id, prop);
@@ -56,12 +58,12 @@ const TableShops = ({ userID }) => {
 
     const handleType = (id) => (e) => {
         const type = Number(e.key);
-        handleSwitchType(id, { type });
+        propsSetter(id, { type });
     }
 
 
     const handleSwitch = (id) => (enabled) => {
-        handleSwitchType(id, { enabled });
+        propsSetter(id, { enabled });
     };
 
 
