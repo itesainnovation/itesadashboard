@@ -2,7 +2,10 @@ import React from 'react'
 import { Button, Popconfirm } from 'antd'
 import { SaveOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
-const ActionsCell = ({editable, edit, id, handleUpdate, handleCancel, handleDelete, setEditable}) => {
+const ActionsCell = ({ values, handlers}) => {
+    const { edit, editable, id } = values;
+    const { handleUpdate, handleCancel, handleDelete, setEditable } = handlers;
+    
     return (
         (editable === id) ? (
 

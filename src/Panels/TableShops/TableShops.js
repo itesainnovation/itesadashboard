@@ -45,9 +45,7 @@ const TableShops = ({ userID }) => {
     }
 
 
-    const propsSetter = (id, prop) => {
-        console.log(id);
-        
+    const editProps = (id, prop) => {
         if (id === '0') {
             setEdit({ ...edit, ...prop });
         } else {
@@ -58,12 +56,12 @@ const TableShops = ({ userID }) => {
 
     const handleType = (id) => (e) => {
         const type = Number(e.key);
-        propsSetter(id, { type });
+        editProps(id, { type });
     }
 
 
     const handleSwitch = (id) => (enabled) => {
-        propsSetter(id, { enabled });
+        editProps(id, { enabled });
     };
 
 
@@ -113,7 +111,10 @@ const TableShops = ({ userID }) => {
             render: (name, { key }) => (
                 (editable === key) ? (
 
-                    <Input name="name" defaultValue={name} onChange={handleChange} className={styles.w200} maxLength="30" autoComplete="off" />
+                    <Input name="name" defaultValue={name}
+                    onChange={handleChange} className={styles.w200}
+                    maxLength="30" autoComplete="off"
+                    />
 
                 ) : (
 
@@ -126,7 +127,9 @@ const TableShops = ({ userID }) => {
             title: 'Modalidad',
             dataIndex: 'type',
             key: 'type',
-            render: (type, { key }) => ( <DropDownTypes type={type} id={key} edit={edit} handleType={handleType} /> )
+            render: (type, { key }) => (
+                <DropDownTypes type={type} id={key} edit={edit} handleType={handleType} />
+            )
         },
         {
             title: 'Habilitada',
@@ -146,7 +149,9 @@ const TableShops = ({ userID }) => {
             dataIndex: 'key',
             key: 'key',
             render: (key) => (
-                <ActionsCell editable={editable} edit={edit} id={key} handleUpdate={handleUpdate} handleCancel={handleCancel} handleDelete={handleDelete} setEditable={setEditable} />
+                <ActionsCell values={{editable, edit, id: key}}
+                    handlers={{handleUpdate, handleCancel, handleDelete, setEditable}}
+                />
             )
         },
     ];
