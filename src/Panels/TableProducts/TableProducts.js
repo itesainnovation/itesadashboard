@@ -39,6 +39,7 @@ const TableProducts = ({ userID }) => {
         },
         {
             title: 'Precio',
+            className: styles.columnMoney,
             dataIndex: 'price',
             key: 'price',
             render: (price) => (
@@ -53,7 +54,7 @@ const TableProducts = ({ userID }) => {
                 <>
                     {false && <Button type="link" icon={<SaveOutlined />}>Guardar</Button>}
                     <Button type="link" icon={<EditOutlined />}>Editar</Button>
-                    <Button type="link" icon={<DeleteOutlined />}>Eliminar</Button>
+                    <Button onClick={() => {console.log('asd')}} type="link" icon={<DeleteOutlined />}>Eliminar</Button>
                 </>
 
             ),
@@ -66,10 +67,8 @@ const TableProducts = ({ userID }) => {
         <div className={styles.tableContent}>
             <div className={styles.scrollTable}>
                 <Table loading={{ spinning: !products.length, delay: 400 }}
-                    bordered
                     dataSource={products}
                     columns={columns}
-                    expandRowByClick
                     expandable={{
                         expandedRowRender: record => (<>
                             <EditableTagGroup shopsIds={record.shops} userID={userID} />
