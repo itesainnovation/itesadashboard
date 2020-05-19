@@ -17,16 +17,15 @@ const TableProducts = ({ userID }) => {
 
             db.collection('products').where('userID', '==', userID)
                 .onSnapshot(function (docs) {
-                    let theData = [];
+                    let prods = [];
                     docs.forEach(doc => {
                         const prod = doc.data();
                         prod.key = doc.id;
 
-                        theData = [...theData, prod]
+                        prods.push(prod)
                     })
-                    console.log(theData);
 
-                    setProducts(theData);
+                    setProducts(prods);
                 })
         }
     }, [userID])
@@ -66,26 +65,24 @@ const TableProducts = ({ userID }) => {
     return (
         <div className={styles.tableContent}>
             <div className={styles.scrollTable}>
-                <Spin spinning={!products.length} delay={400}>
-                    <Table
-                        bordered
-                        dataSource={products}
-                        columns={columns}
-                        expandable={{
-                            expandedRowRender: record => (<>
-                                <EditableTagGroup /> <p style={{ margin: 0 }}>{record.shops}</p>
-                            </>),
-                            rowExpandable: record => record.shops.length,
-                            expandIconColumnIndex: 4,
-
-                        }}
-                    />
-                </Spin>
+                <Table loading={{ spinning: !products.length, delay: 400 }}
+                    bordered
+                    dataSource={products}
+                    columns={columns}
+                    expandRowByClick
+                    expandable={{
+                        expandedRowRender: record => (<>
+                            <EditableTagGroup shopsIds={record.shops} userID={userID} />
+                        </>),
+                        rowExpandable: record => record.shops.length,
+                        expandIconColumnIndex: 4,
+                    }}
+                />
             </div>
-            {/* <Button onClick={handleNew} type="primary" disabled={editable !== ''} className={styles.btnRelative}>
+            <Button onClick={null} type="primary" disabled={null} className={styles.btnRelative}>
                 <span className={styles.btnIcon}>+</span>
-                Agregar nueva tienda
-            </Button> */}
+                Agregar nuevo producto
+            </Button>
         </div>
     );
 };
