@@ -3,6 +3,11 @@
         width: 200px;
         display: inline-block;
     }
+    .wPrice {
+        min-width: 70px;
+        max-width: 100px;
+        display: inline-block;
+    }
     .btnRelative {
         float: right;
         position: relative;
@@ -13,7 +18,6 @@
     }
     tbody > tr:hover > td {
         background-color: #f9f0ff !important;
-        // background-color: red !important;
     }
     thead tr th:last-child::before {
         content: 'Tiendas';
