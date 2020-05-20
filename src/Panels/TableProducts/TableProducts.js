@@ -1,42 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Switch, Dropdown, Menu, Button, Spin, Input } from 'antd';
-import 'firebase/firestore';
-import firebase from "../../utils/firebase";
-import { DownOutlined, EditOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { Table, Button, Input } from 'antd';
+import {getCollection, collectionSnapshot, docSet} from "../../utils/firebase";
 import styles from './tableproducts.module.scss';
 import EditableTagGroup from '../Components/EditableTagGroup/EditableTagGroup';
 import ActionsCell from '../Components/ActionsCell/ActionsCell';
 
-let db = firebase.firestore();
 
-const fsProdsSet = (id, prop) => {
-    const prodDoc = db.collection('products/').doc(id);
-    prodDoc.set(prop, { merge: true });
-}
+const productsCollection = getCollection('products');
 
 
+/* --TableProducts Component-- */
 const TableProducts = ({ userID }) => {
-
     const [products, setProducts] = useState([])
     const [editable, setEditable] = useState('')
     const [edit, setEdit] = useState({})
 
     useEffect(() => {
-        if (userID) {
-
-            db.collection('products').where('userID', '==', userID)
-                .onSnapshot(function (docs) {
-                    let prods = [];
-                    docs.forEach(doc => {
-                        const prod = doc.data();
-                        prod.key = doc.id;
-                        prods.push(prod)
-                    })
-                    setProducts(prods);
-                })
-        }
+        collectionSnapshot(userID, productsCollection, setProducts)
     }, [userID])
-
+    console.log(products);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,9 +29,9 @@ const TableProducts = ({ userID }) => {
 
     const handleUpdate = (id) => async () => {
         if (editable === '0') {
-            await db.collection('products/').add(edit);
+            await productsCollection.add(edit);
         } else {
-            fsProdsSet(id, { ...edit });
+            docSet(productsCollection, id, { ...edit });
         }
         setEditable('');
         setEdit({});
@@ -56,7 +39,7 @@ const TableProducts = ({ userID }) => {
 
 
     const handleDelete = (key) => () => {
-        db.collection('products/').doc(key).delete();
+        productsCollection.doc(key).delete();
     }
 
 
@@ -96,9 +79,9 @@ const TableProducts = ({ userID }) => {
 
                 ) : (
 
-                    <span> {name} </span>
+                        <span> {name} </span>
 
-                )
+                    )
             )
         },
         {
@@ -116,9 +99,9 @@ const TableProducts = ({ userID }) => {
 
                 ) : (
 
-                    <span className={styles.wPrice}>$ {price} </span>
+                        <span className={styles.wPrice}>$ {price} </span>
 
-                )
+                    )
             )
         },
         {

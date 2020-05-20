@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
+import 'firebase/firestore';
 
-let config = {
+const config = {
     apiKey: "AIzaSyCVOsLHW_DOxOr2U7K1WqbGBtCqOWnl_94",
     authDomain: "itesacheckouts.firebaseapp.com",
     databaseURL: "https://itesacheckouts.firebaseio.com",
@@ -12,4 +13,28 @@ let config = {
 };
 firebase.initializeApp(config);
 
-export default firebase;
+const getCollection = (id) => (firebase.firestore().collection(id))
+
+const collectionSnapshot = (userID, collection, setArray) => {
+    if (userID) {
+        collection.where('userID', '==', userID)
+            .onSnapshot(function (docs) {
+                let array = [];
+                docs.forEach(doc => {
+                    const element = doc.data();
+                    element.key = doc.id;
+                    array.push(element)
+                })
+                setArray(array);
+            })
+    }
+}
+
+const docSet = (collection, id, prop) => {
+    const doc = collection.doc(id);
+    doc.set(prop, { merge: true });
+}
+
+const firebaseApp = firebase;
+
+export {firebaseApp, getCollection, collectionSnapshot, docSet};

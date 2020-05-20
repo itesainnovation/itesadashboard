@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { TheApp } from "./TheApp/TheApp";
-import firebase from "./utils/firebase";
-import 'firebase/firestore'
-import 'firebase/auth'
+import {firebaseApp} from "./utils/firebase";
+import 'firebase/firestore';
+import 'firebase/auth';
 
 function App() {
     const [login, setLogin] = useState(false);
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged(function (user) {
+        firebaseApp.auth().onAuthStateChanged(function (user) {
 
             user = { uid: '123asasd' }
 
             if (user) {
                 setLogin(true)
                 let uid = user.uid;
-                let db = firebase.firestore();
+                let db = firebaseApp.firestore();
 
                 db.collection('users').where('uid', '==', uid)
                     .onSnapshot(function (docs) {

@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Switch, Button, Spin, Input } from 'antd';
-import 'firebase/firestore';
-import firebase from "../../utils/firebase";
 import styles from './tableshops.module.scss';
 import DropDownTypes from '../Components/DropDownTypes/DropDownTypes';
 import ActionsCell from '../Components/ActionsCell/ActionsCell';
+import {getCollection, collectionSnapshot, docSet} from "../../utils/firebase";
 
-let db = firebase.firestore();
 
-const fsShopSet = (id, prop) => {
-    const shopDoc = db.collection('shops/').doc(id);
-    shopDoc.set(prop, { merge: true });
-}
+const shopsCollection = getCollection('shops');
 
+
+/* --TableShops Component-- */
 
 const TableShops = ({ userID }) => {
     const [shops, setShops] = useState([])
@@ -20,21 +17,7 @@ const TableShops = ({ userID }) => {
     const [edit, setEdit] = useState({})
 
     useEffect(() => {
-        if (userID) {
-
-            db.collection('shops').where('userID', '==', userID)
-                .onSnapshot(function (docs) {
-                    let theData = [];
-                    docs.forEach(doc => {
-                        const shop = doc.data();
-                        shop.key = doc.id;
-
-                        theData = [...theData, shop]
-                    })
-                    setShops(theData);
-                    setEditable('');
-                })
-        }
+        collectionSnapshot(userID, shopsCollection, setShops)
     }, [userID])
 
     
@@ -48,7 +31,7 @@ const TableShops = ({ userID }) => {
         if (id === '0') {
             setEdit({ ...edit, ...prop });
         } else {
-            fsShopSet(id, prop);
+            docSet(shopsCollection, id, prop);
         }
     }
 
@@ -66,9 +49,9 @@ const TableShops = ({ userID }) => {
 
     const handleUpdate = (id) => async () => {
         if (editable === '0') {
-            await db.collection('shops/').add(edit);
+            await shopsCollection.add(edit);
         } else {
-            fsShopSet(id, {...edit});
+            docSet(shopsCollection, id, {...edit});
         }
         setEditable('');
         setEdit({});
@@ -76,7 +59,7 @@ const TableShops = ({ userID }) => {
 
 
     const handleDelete = (key) => () => {
-        db.collection('shops/').doc(key).delete();
+        shopsCollection.doc(key).delete();
     }
 
 

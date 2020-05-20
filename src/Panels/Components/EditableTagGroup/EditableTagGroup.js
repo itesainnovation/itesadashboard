@@ -1,11 +1,9 @@
 import React from 'react';
-
 import { Tag, Input } from 'antd';
 import { TweenOneGroup } from 'rc-tween-one';
 import { PlusOutlined } from '@ant-design/icons';
 import styles from './editableTagGroup.module.scss'
-import 'firebase/firestore';
-import firebase from "../../../utils/firebase";
+import { getCollection } from "../../../utils/firebase";
 
 class EditableTagGroup extends React.Component {
 
@@ -21,10 +19,10 @@ class EditableTagGroup extends React.Component {
     componentDidMount() {
 
         if (this.props.userID) {
-            let db = firebase.firestore();
+            const shopsCollection = getCollection('shops');
             // Map the Firebase promises into an array
             const arrayPromises = this.props.shopsIds.map(id => {
-                return db.collection('shops').doc(id).get()
+                return shopsCollection.doc(id).get()
             })
 
             Promise.all(arrayPromises)
