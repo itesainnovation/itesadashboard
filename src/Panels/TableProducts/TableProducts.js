@@ -5,7 +5,6 @@ import styles from './tableproducts.module.scss';
 import EditableTagGroup from '../Components/EditableTagGroup/EditableTagGroup';
 import ActionsCell from '../Components/ActionsCell/ActionsCell';
 
-
 const productsCollection = getCollection('products');
 
 
@@ -18,14 +17,12 @@ const TableProducts = ({ userID }) => {
     useEffect(() => {
         collectionSnapshot(userID, productsCollection, setProducts)
     }, [userID])
-    console.log(products);
-    
 
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEdit({ ...edit, [name]: value })
     }
-
 
     const handleUpdate = (id) => async () => {
         if (editable === '0') {
@@ -37,11 +34,9 @@ const TableProducts = ({ userID }) => {
         setEdit({});
     }
 
-
     const handleDelete = (key) => () => {
         productsCollection.doc(key).delete();
     }
-
 
     const removeUnsavedRow = () => {
         if (editable === '0') {
@@ -50,13 +45,11 @@ const TableProducts = ({ userID }) => {
         }
     }
 
-
     const handleCancel = () => {
         removeUnsavedRow();
         setEditable('');
         setEdit({});
     }
-
 
     const handleEditable = (id) => {
         removeUnsavedRow();
@@ -71,17 +64,13 @@ const TableProducts = ({ userID }) => {
             key: 'name',
             render: (name, { key }) => (
                 (editable === key) ? (
-
                     <Input name="name" defaultValue={name}
                         onChange={handleChange} className={styles.w200}
                         maxLength="30" autoComplete="off"
                     />
-
                 ) : (
-
-                        <span> {name} </span>
-
-                    )
+                    <span> {name} </span>
+                )
             )
         },
         {
@@ -91,16 +80,12 @@ const TableProducts = ({ userID }) => {
             key: 'price',
             render: (price, { key }) => (
                 (editable === key) ? (
-
                     <Input name="price" defaultValue={price} type="number"
                         onChange={handleChange} className={styles.wPrice}
                         maxLength="12" autoComplete="off"
                     />
-
                 ) : (
-
                         <span className={styles.wPrice}>$ {price} </span>
-
                     )
             )
         },

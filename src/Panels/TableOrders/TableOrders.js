@@ -5,7 +5,6 @@ import styles from './tableorders.module.scss';
 import EditableTagGroup from '../Components/EditableTagGroup/EditableTagGroup';
 import ActionsCell from '../Components/ActionsCell/ActionsCell';
 
-
 const ordersCollection = getCollection('orders');
 
 
@@ -26,7 +25,6 @@ const TableOrders = ({ userID }) => {
         setEdit({ ...edit, [name]: value })
     }
 
-
     const handleUpdate = (id) => async () => {
         if (editable === '0') {
             await ordersCollection.add(edit);
@@ -37,11 +35,9 @@ const TableOrders = ({ userID }) => {
         setEdit({});
     }
 
-
     const handleDelete = (key) => () => {
         ordersCollection.doc(key).delete();
     }
-
 
     const removeUnsavedRow = () => {
         if (editable === '0') {
@@ -50,13 +46,11 @@ const TableOrders = ({ userID }) => {
         }
     }
 
-
     const handleCancel = () => {
         removeUnsavedRow();
         setEditable('');
         setEdit({});
     }
-
 
     const handleEditable = (id) => {
         removeUnsavedRow();
@@ -71,16 +65,12 @@ const TableOrders = ({ userID }) => {
             key: 'name',
             render: (name, { key }) => (
                 (editable === key) ? (
-
                     <Input name="name" defaultValue={name}
                         onChange={handleChange} className={styles.w200}
                         maxLength="30" autoComplete="off"
                     />
-
                 ) : (
-
                     <span> {name} </span>
-
                 )
             )
         },
@@ -91,16 +81,12 @@ const TableOrders = ({ userID }) => {
             key: 'price',
             render: (price, { key }) => (
                 (editable === key) ? (
-
                     <Input name="price" defaultValue={price} type="number"
                         onChange={handleChange} className={styles.wPrice}
                         maxLength="12" autoComplete="off"
                     />
-
                 ) : (
-
                     <span className={styles.wPrice}>$ {price} </span>
-
                 )
             )
         },
@@ -114,7 +100,6 @@ const TableOrders = ({ userID }) => {
                 />
             )
         },
-
     ];
 
 

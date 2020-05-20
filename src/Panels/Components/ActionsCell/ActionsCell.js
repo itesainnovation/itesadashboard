@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Popconfirm } from 'antd'
 import { SaveOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
-const ActionsCell = ({ values, handlers}) => {
+const ActionsCell = ({ values, handlers }) => {
     const { edit, editable, id } = values;
     const { handleUpdate, handleCancel, handleDelete, handleEditable } = handlers;
     return (
@@ -16,25 +16,22 @@ const ActionsCell = ({ values, handlers}) => {
                     Cancelar
                 </Button>
             </>
-
         ) : (
-            
-                <>
-                    <Button onClick={() => handleEditable(id)} type="link" icon={<EditOutlined />}>
-                        Editar
+            <>
+                <Button onClick={() => handleEditable(id)} type="link" icon={<EditOutlined />}>
+                    Editar
+                </Button>
+                <Popconfirm
+                    title="¿Desea eliminar la tienda?"
+                    onConfirm={handleDelete(id)}
+                    okText="Eliminar" cancelText="Volver"
+                >
+                    <Button type="link" icon={<DeleteOutlined />}>
+                        Eliminar
                     </Button>
-                    <Popconfirm
-                        title="¿Desea eliminar la tienda?"
-                        onConfirm={handleDelete(id)}
-                        okText="Eliminar" cancelText="Volver"
-                    >
-                        <Button type="link" icon={<DeleteOutlined />}>
-                            Eliminar
-                        </Button>
-                    </Popconfirm>
-                </>
-
-            )
+                </Popconfirm>
+            </>
+        )
     )
 }
 

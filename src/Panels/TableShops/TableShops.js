@@ -103,16 +103,12 @@ const TableShops = ({ userID }) => {
             key: 'name',
             render: (name, { key }) => (
                 (editable === key) ? (
-
                     <Input name="name" defaultValue={name}
                     onChange={handleChange} className={styles.w200}
                     maxLength="30" autoComplete="off"
                     />
-
                 ) : (
-
                     <span className={styles.w200}> {name} </span>
-
                 )
             )
         },

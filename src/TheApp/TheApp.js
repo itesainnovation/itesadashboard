@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Breadcrumb, Button, Icon, Layout, Modal, PageHeader, Typography, Drawer} from "antd";
+import {Breadcrumb, Button, Layout, PageHeader, Typography} from "antd";
 import styles from './theapp.module.scss';
 import logo from '../images/logogv.png'
 import itesa from '../images/logo-itesa.png'
@@ -8,8 +8,10 @@ import {DrawerMobile} from "../Drawers/DrawerMobile";
 import {MenuOutlined} from '@ant-design/icons';
 import TableShops from '../Panels/TableShops/TableShops';
 import TableProducts from '../Panels/TableProducts/TableProducts';
+import TableOrders from '../Panels/TableOrders/TableOrders';
+import AccountSettings from '../Panels/AccountSettings/AccountSettings';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 
 export function TheApp({user}) {
@@ -24,10 +26,10 @@ export function TheApp({user}) {
     const {userID} = user;
     
     const contentBody =  (
-        (itemOpen === 'pedidos' && <TableShops userID={userID} />) ||
+        (itemOpen === 'pedidos' && <TableOrders userID={userID} />) ||
         (itemOpen === 'tiendas' && <TableShops userID={userID} />) ||
         (itemOpen === 'Productos' && <TableProducts userID={userID} />) ||
-        (itemOpen === 'Mi cuenta' && <TableShops userID={userID} />)
+        (itemOpen === 'Mi cuenta' && <AccountSettings userID={userID} />)
     )
     return (
         <div className={styles.theHome}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tag, Input } from 'antd';
+import { Tag, } from 'antd';
 import { TweenOneGroup } from 'rc-tween-one';
 import { PlusOutlined } from '@ant-design/icons';
 import styles from './editableTagGroup.module.scss'
@@ -89,9 +89,8 @@ class EditableTagGroup extends React.Component {
     };
 
 
-
     render() {
-        const { tags, inputVisible, inputValue } = this.state;
+        const { tags, /* inputVisible, inputValue */ } = this.state;
         const tagChild = tags.map(this.forMap);
         return (
             <div className={styles.EditableTagGroup}>
