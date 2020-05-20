@@ -18,7 +18,8 @@ const TableOrders = ({ userID }) => {
     useEffect(() => {
         collectionSnapshot(userID, ordersCollection, setOrders)
     }, [userID])
-
+    console.log(orders);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -73,6 +74,34 @@ const TableOrders = ({ userID }) => {
                     <span> {name} </span>
                 )
             )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
         },
         {
             title: 'Precio',
@@ -89,15 +118,75 @@ const TableOrders = ({ userID }) => {
                     <span className={styles.wPrice}>$ {price} </span>
                 )
             )
-        },
-        {
-            title: 'Acciones',
-            dataIndex: 'key',
-            key: 'key',
-            render: (key) => (
-                <ActionsCell values={{ editable, edit, id: key }}
-                    handlers={{ handleUpdate, handleCancel, handleDelete, handleEditable }}
-                />
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
+            )
+        },{
+            title: 'Nombre',
+            dataIndex: 'name',
+            key: 'name',
+            render: (name, { key }) => (
+                (editable === key) ? (
+                    <Input name="name" defaultValue={name}
+                        onChange={handleChange} className={styles.w200}
+                        maxLength="30" autoComplete="off"
+                    />
+                ) : (
+                    <span> {name} </span>
+                )
             )
         },
     ];
@@ -110,11 +199,10 @@ const TableOrders = ({ userID }) => {
                     dataSource={orders}
                     columns={columns}
                     expandable={{
-                        expandedRowRender: record => (<>
+                        expandedRowRender: record => (
                             <EditableTagGroup shopsIds={record.shops} userID={userID} />
-                        </>),
+                        ),
                         rowExpandable: record => record.shops.length,
-                        expandIconColumnIndex: 4,
                     }}
                 />
             </div>

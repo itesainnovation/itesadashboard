@@ -110,9 +110,9 @@ const TableProducts = ({ userID }) => {
                     dataSource={products}
                     columns={columns}
                     expandable={{
-                        expandedRowRender: record => (<>
+                        expandedRowRender: record => (
                             <EditableTagGroup shopsIds={record.shops} userID={userID} />
-                        </>),
+                        ),
                         rowExpandable: record => record.shops.length,
                         expandIconColumnIndex: 4,
                     }}
