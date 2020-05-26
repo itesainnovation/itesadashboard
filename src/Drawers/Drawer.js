@@ -10,11 +10,9 @@ export function Drawer({setItemOpen}) {
     useEffect(() => {
 
     });
-    
     const handleClick = e => {
-        setItemOpen(e.key);
+        setItemOpen(e.keyPath);
     };
-
     return (
         <Sider breakpoint="md" collapsedWidth="0" className={styles.drawer} width={200} style={{ background: '#fff' }}>
             <Menu

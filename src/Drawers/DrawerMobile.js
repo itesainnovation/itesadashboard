@@ -8,11 +8,11 @@ export function DrawerMobile({setItemOpen, mobileOpen, setMobileOpen}) {
     useEffect(() => {
 
     });
-    
     const handleClick = e => {
-        setItemOpen(e.key);
-    };
 
+        setItemOpen(e.keyPath);
+
+    };
     return (
         <Drawer
             title={<img className={styles.itesaLogo} src={itesa}/>}
